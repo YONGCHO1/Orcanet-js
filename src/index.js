@@ -14,6 +14,10 @@ import geoip from 'geoip-lite';
 import { handleRequestFile, handleDownloadFile, payForChunk, handlePayForChunk } from "./Libp2p/protocol.js"
 import {EventEmitter} from 'node:events';
 import { createHTTPGUI } from "./Libp2p/gui-connection.js"
+// import { validators } from "@libp2p/kad-dht/src/record/validators.js"
+// import { selectors } from "@libp2p/kad-dht/src/record/selectors.js"
+// import { Libp2pRecord } from "@libp2p/kad-dht/src/record/index.js"
+import { identify } from '@libp2p/identify'
 
 class Emitter extends EventEmitter {}
 
@@ -84,17 +88,25 @@ async function main() {
         peerDiscovery: [
             mdns(),
             // Bootstrap nodes are initialized as entrypoints into the peer node network
-            // bootstrap({
-            //     list: [
-            //         // bootstrap node here is generated from dig command
-            //         '/dnsaddr/sg1.bootstrap.libp2p.io/p2p/QmcZf59bWwK5XFi76CZX8cbJ4BhTzzA3gU1ZjYZcYW3dwt'
-            //     ]
-            // })
+            bootstrap({
+                list: [
+                    // bootstrap node here is generated from dig command
+                    '/dnsaddr/sg1.bootstrap.libp2p.io/p2p/QmcZf59bWwK5XFi76CZX8cbJ4BhTzzA3gU1ZjYZcYW3dwt'
+                ]
+            })
         ],
         services: {
+            // identify: identify({
+                
+            // }),
             pubsub: gossipsub(options),
             dht: kadDHT({
                 kBucketSize: 20,
+                clientMode: false,
+                protocol: "market",
+                
+                // selectors: selectors,
+                // validators: validators,
             })
         }
     });

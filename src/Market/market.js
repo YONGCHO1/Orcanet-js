@@ -24,7 +24,7 @@ const getNode = (n) => {
 var market_proto = grpc.loadPackageDefinition(packageDefinition).market;
 
 
-let target = "127.0.0.1:50052";
+let target = "0.0.0.0:50052";
 
 const server = new grpc.Server();
 server.addService(market_proto.Market.service, { RegisterFile: registerFile, CheckHolders: checkHolders });
@@ -133,6 +133,13 @@ async function registerFile(call, callback) {
     for await (const queryEvent of value) {
         const message = new TextDecoder('utf8').decode(queryEvent.value);
         console.log("value of each qeury is ", message);
+    }
+
+    const closePeer = node.services.dht.getClosestPeers(keyEncoded);
+    for await (const queryEvent of closePeer) {
+        console.log(queryEvent);
+        const peer = new TextDecoder('utf8').decode(queryEvent.value);
+        console.log("peer of each qeury is ", peer);
     }
     
     console.log("----------------end register file-------------------");
