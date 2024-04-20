@@ -5,6 +5,7 @@ import protoLoader from '@grpc/proto-loader';
 import { CID } from 'multiformats/cid'
 import * as json from 'multiformats/codecs/json'
 import { sha256 } from 'multiformats/hashes/sha2'
+// import { DHTRecord } from '@libp2p/kad-dht';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PROTO_PATH = __dirname + '/market.proto';
@@ -40,12 +41,12 @@ server.bindAsync(target, grpc.ServerCredentials.createInsecure(), (error) => {
 // ######## Registerfile Function #########
 async function registerFile(call, callback) {
     let newUser = call.request.user;
-    // let cid = call.request.fileHash;
+    let cid = "/market/" + call.request.fileHash;
 
-    const bytes = json.encode({ fileHash: call.request.fileHash })
+    // const bytes = json.encode({ fileHash: call.request.fileHash })
 
-    const hash = await sha256.digest(bytes)
-    const cid = CID.create(1, json.code, hash)
+    // const hash = await sha256.digest(bytes)
+    // const cid = CID.create(1, json.code, hash)
     console.log("------------------register file---------------------");
 
     console.log("cid is ",cid);
@@ -137,7 +138,7 @@ async function registerFile(call, callback) {
             const message = new TextDecoder('utf8').decode(queryEvent.value);
             console.log("value of each qeury is ", message);
         }
-        await node.contentRouting.provide(cid);
+        // await node.contentRouting.provide(cid);
     }
     node.services.dht.refreshRoutingTable();
 
@@ -147,8 +148,9 @@ async function registerFile(call, callback) {
         console.log("value of each qeury is ", message);
     }
 
-    const closePeer = node.services.dht.getClosestPeers(keyEncoded);
+    const closePeer = node.peerRouting.getClosestPeers(keyEncoded);
     for await (const queryEvent of closePeer) {
+        console.log("get into get closest peer")
         console.log(queryEvent);
         const peer = new TextDecoder('utf8').decode(queryEvent.value);
         console.log("peer of each qeury is ", peer);
@@ -161,7 +163,7 @@ async function registerFile(call, callback) {
 
 // ######## CheckHolders Function #########
 async function checkHolders(call, callback) {
-    const cid = call.request.fileHash;
+    const cid = "/market/" + call.request.fileHash;
     console.log("------------------check holders---------------------");
     
     try {
@@ -173,23 +175,23 @@ async function checkHolders(call, callback) {
 
         node.services.dht.refreshRoutingTable();
 
-
         const value = node.services.dht.get(keyEncoded);
         for await (const queryEvent of value) {
             message = new TextDecoder('utf8').decode(queryEvent.value);
+            // console.log(`A value u got is ${message}`)
         }
        
         const values = message.split('\n');
 
         const holders = [];
-        console.log("before getting into findProvider");
-        const provider = await node.contentRouting.findProviders(cid)
+        // console.log("before getting into findProvider");
+        // const provider = await node.contentRouting.findProviders(cid)
         // provider.forEach((x) => {
         //     console.log(" x is ", x)
         // })
-        console.log("get into findProvider function and provider is ", provider)
-        console.log(provider.id, provider.multiaddrs, provider[0], provider)
-        holders.push(provider);
+        // console.log("get into findProvider function and provider is ", provider)
+        // console.log(provider.id, provider.multiaddrs, provider[0], provider)
+        // holders.push(provider);
 
         values.forEach(user => {
             const userInfo = user.split('/')

@@ -14,9 +14,6 @@ import geoip from 'geoip-lite';
 import { handleRequestFile, handleDownloadFile, payForChunk, handlePayForChunk } from "./Libp2p/protocol.js"
 import {EventEmitter} from 'node:events';
 import { createHTTPGUI } from "./Libp2p/gui-connection.js"
-// import { ValidateFn } from "@libp2p/kad-dht"
-// import { SelectFn } from "@libp2p/kad-dht"
-// import { Libp2pRecord } from "@libp2p/kad-dht/src/record/index.js"
 import { identify } from '@libp2p/identify'
 
 class Emitter extends EventEmitter {}
@@ -101,12 +98,20 @@ async function main() {
             identify: identify(),
             pubsub: gossipsub(options),
             dht: kadDHT({
-                kBucketSize: 20,
                 clientMode: false,
-                protocol: "market",
-                peerInfoMapper: removePrivateAddressesMapper,
-                // selectors: SelectFn(),
-                // validators: ValidateFn(),
+                // protocol: "market",
+                // peerInfoMapper: removePrivateAddressesMapper,
+                selectors: {
+                    market: () => {
+                        return 0;
+                    }
+                },
+                validators: {
+                    market: () => {
+                        return true;
+                    }
+                },
+                
             })
         },
         config: {
