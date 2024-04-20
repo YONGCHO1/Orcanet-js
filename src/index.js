@@ -14,8 +14,8 @@ import geoip from 'geoip-lite';
 import { handleRequestFile, handleDownloadFile, payForChunk, handlePayForChunk } from "./Libp2p/protocol.js"
 import {EventEmitter} from 'node:events';
 import { createHTTPGUI } from "./Libp2p/gui-connection.js"
-// import { validators } from "@libp2p/kad-dht/src/record/validators.js"
-// import { selectors } from "@libp2p/kad-dht/src/record/selectors.js"
+// import { ValidateFn } from "@libp2p/kad-dht"
+// import { SelectFn } from "@libp2p/kad-dht"
 // import { Libp2pRecord } from "@libp2p/kad-dht/src/record/index.js"
 import { identify } from '@libp2p/identify'
 
@@ -98,18 +98,26 @@ async function main() {
             })
         ],
         services: {
-            // identify: identify({
-                
-            // }),
+            identify: identify(),
             pubsub: gossipsub(options),
             dht: kadDHT({
                 kBucketSize: 20,
                 clientMode: false,
                 protocol: "market",
                 peerInfoMapper: removePrivateAddressesMapper,
-                // selectors: selectors,
-                // validators: validators,
+                // selectors: SelectFn(),
+                // validators: ValidateFn(),
             })
+        },
+        config: {
+            kadDHT: {
+                enabled: true,
+                randomWalk: {
+                    enabled: true,
+                }
+            
+            }
+            
         }
     });
 
@@ -137,7 +145,7 @@ async function main() {
     test_node2.addEventListener('peer:discovery', (evt) => {
         try {
             const peerId = evt.detail.id;
-            console.log(`Peer ${peerId} has disconnected`)
+            console.log(`Peer ${peerId} has discovered`)
             const multiaddrs = evt.detail.multiaddrs;
 
             ipAddresses.length = 0;
