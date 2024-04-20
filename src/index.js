@@ -2,7 +2,7 @@ import displayMenu from "./Libp2p/cli.js"
 import { createLibp2p } from 'libp2p'
 import { tcp } from '@libp2p/tcp'
 import { noise } from '@chainsafe/libp2p-noise'
-import { kadDHT } from '@libp2p/kad-dht'
+import { kadDHT, removePrivateAddressesMapper } from '@libp2p/kad-dht'
 import { yamux } from '@chainsafe/libp2p-yamux'
 import { ping } from '@libp2p/ping' // remove this after done testing
 import { bootstrap } from '@libp2p/bootstrap'
@@ -91,7 +91,9 @@ async function main() {
             bootstrap({
                 list: [
                     // bootstrap node here is generated from dig command
-                    '/dnsaddr/sg1.bootstrap.libp2p.io/p2p/QmcZf59bWwK5XFi76CZX8cbJ4BhTzzA3gU1ZjYZcYW3dwt'
+                    // '/dnsaddr/sg1.bootstrap.libp2p.io/p2p/QmcZf59bWwK5XFi76CZX8cbJ4BhTzzA3gU1ZjYZcYW3dwt',
+                    '/ip4/172.174.239.70/tcp/54166/p2p/12D3KooWNbUzkzHsYAA6aq4jnsrkfj99hKogPmqPGChPMWmkcxTx',
+                    '/dnsaddr/ny5.bootstrap.libp2p.io/p2p/QmQCU2EcMqAqQPR2i9bChDtGNJchTbq5TbXJJ16u19uLTa',
                 ]
             })
         ],
@@ -104,7 +106,7 @@ async function main() {
                 kBucketSize: 20,
                 clientMode: false,
                 protocol: "market",
-                
+                peerInfoMapper: removePrivateAddressesMapper,
                 // selectors: selectors,
                 // validators: validators,
             })

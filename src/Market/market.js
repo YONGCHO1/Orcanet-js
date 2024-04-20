@@ -123,6 +123,7 @@ async function registerFile(call, callback) {
         console.log("First time to upload the file from err");
         const putv = node.services.dht.put(keyEncoded, valueEncoded);
         for await (const queryEvent of putv) {
+            console.log(`Status after put value is ${queryEvent}`);
             const message = new TextDecoder('utf8').decode(queryEvent.value);
             console.log("value of each qeury is ", message);
         }
