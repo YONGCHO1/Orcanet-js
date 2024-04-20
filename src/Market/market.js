@@ -2,6 +2,9 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import grpc from '@grpc/grpc-js';
 import protoLoader from '@grpc/proto-loader';
+import { CID } from 'multiformats/cid'
+import * as json from 'multiformats/codecs/json'
+import { sha256 } from 'multiformats/hashes/sha2'
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PROTO_PATH = __dirname + '/market.proto';
@@ -37,7 +40,12 @@ server.bindAsync(target, grpc.ServerCredentials.createInsecure(), (error) => {
 // ######## Registerfile Function #########
 async function registerFile(call, callback) {
     let newUser = call.request.user;
-    let cid = call.request.fileHash;
+    // let cid = call.request.fileHash;
+
+    const bytes = json.encode({ fileHash: call.request.fileHash })
+
+    const hash = await sha256.digest(bytes)
+    const cid = CID.create(1, json.code, hash)
     console.log("------------------register file---------------------");
 
     const keyEncoded = new TextEncoder('utf8').encode(cid);
@@ -127,6 +135,7 @@ async function registerFile(call, callback) {
             const message = new TextDecoder('utf8').decode(queryEvent.value);
             console.log("value of each qeury is ", message);
         }
+        await node.contentRouting.provide(cid);
     }
     node.services.dht.refreshRoutingTable();
 
