@@ -48,6 +48,8 @@ async function registerFile(call, callback) {
     const cid = CID.create(1, json.code, hash)
     console.log("------------------register file---------------------");
 
+    console.log("cid is ",cid);
+
     const keyEncoded = new TextEncoder('utf8').encode(cid);
     const userInfo = `${newUser.id}/${newUser.name}/${newUser.ip}/${newUser.port}/${newUser.price}`;
     const valueEncoded = new TextEncoder('utf8').encode(userInfo);
@@ -166,10 +168,12 @@ async function checkHolders(call, callback) {
         console.log("key in the checkholders is "+cid);
         
         const keyEncoded = new TextEncoder('utf8').encode(cid);
-
+        
         let message;
 
         node.services.dht.refreshRoutingTable();
+
+
         const value = node.services.dht.get(keyEncoded);
         for await (const queryEvent of value) {
             message = new TextDecoder('utf8').decode(queryEvent.value);
@@ -178,6 +182,14 @@ async function checkHolders(call, callback) {
         const values = message.split('\n');
 
         const holders = [];
+        console.log("before getting into findProvider");
+        const provider = await node.contentRouting.findProviders(cid)
+        // provider.forEach((x) => {
+        //     console.log(" x is ", x)
+        // })
+        console.log("get into findProvider function and provider is ", provider)
+        console.log(provider.id, provider.multiaddrs, provider[0], provider)
+        holders.push(provider);
 
         values.forEach(user => {
             const userInfo = user.split('/')

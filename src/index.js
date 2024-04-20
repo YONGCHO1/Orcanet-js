@@ -142,6 +142,23 @@ async function main() {
     const ipAddresses = [];
     let local_peer_node_info = {};
 
+    test_node2.addEventListener('peer:connect', async (event) => {
+        const peerInfo = event.detail;
+        console.log('A Peer ID ' + peerInfo + ' Connected with us!');
+        // const peer = await nodes.peerRouting.findPeer(peerInfo);
+
+
+        // nodes.services.dht.getClosestPeers()
+        // nodes.services.dht.get
+        // console.log(nodes.services.identify.)
+        // // console.log(peer);
+        // await nodes.dial(peer.multiaddrs);
+        
+        // // console.log(peer);
+        // nodes.peerStore.patch(peerInfo, peer.multiaddrs);
+        // nodes.peerStore.save(peerInfo, peer.multiaddrs);
+    });
+
     test_node2.addEventListener('peer:discovery', (evt) => {
         try {
             const peerId = evt.detail.id;
