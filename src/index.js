@@ -150,9 +150,17 @@ async function main() {
     test_node2.addEventListener('peer:connect', async (event) => {
         const peerInfo = event.detail;
         console.log('A Peer ID ' + peerInfo + ' Connected with us!');
+        // event.detail.
+        // console.log(event.detail.multihash);
         // const peer = await nodes.peerRouting.findPeer(peerInfo);
+        await test_node2.dial(peerInfo);
+        // await test_node2.peerStore.save(peerInfo, );
 
-
+        // discoveredPeers.forEach(async x => {
+        //     console.log("value of x is ",x);
+            
+            
+        // })
         // nodes.services.dht.getClosestPeers()
         // nodes.services.dht.get
         // console.log(nodes.services.identify.)
