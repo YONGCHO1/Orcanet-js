@@ -123,9 +123,6 @@ async function main() {
     
     await test_node.start();
     await test_node2.start();
-
-    
-
     console.log('Test Node 2 has started:', test_node2.peerId);
     console.log("Actively searching for peers on the local network...");
     // console.log("Multiaddr of Test Node 2:", getMultiaddrs(test_node2))
@@ -227,6 +224,8 @@ async function main() {
     }
     process.on('SIGTERM', () => stop(test_node2))
     process.on('SIGINT', () => stop(test_node2))
+    createAPI(test_node2);
+
     displayMenu(discoveredPeers, test_node2, test_node);
     
 }

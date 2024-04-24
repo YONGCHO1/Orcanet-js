@@ -4,7 +4,7 @@ import http from 'http';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import { MAX_CHUNK_SIZE, jobs } from '../Libp2p/utils.js';
+import { MAX_CHUNK_SIZE, activities, download_speeds, jobs } from '../Libp2p/utils.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const consumerFilesPath = path.join(__dirname, '..', 'testConsumerFiles');
@@ -45,6 +45,11 @@ export async function sendRequestFile(peerId, prodIp, prodPort, fileHash, jobId)
                 accumulatedChunks = Buffer.concat([accumulatedChunks, chunk]);
                 totalBytesReceived += chunk.length;
 
+                const currentTimeInSeconds = Math.floor(Date.now() / 1000);
+                if (Object.keys(download_speeds).length > 10000) {download_speeds = {}}
+                if (!download_speeds.hasOwnProperty[currentTimeInSeconds]) {download_speeds[currentTimeInSeconds] = 0}
+                download_speeds[currentTimeInSeconds] += chunk.length;
+
                 if (jobs[jobId]['status'] == 'error') { return}
                 jobs[jobId]['accumulatedMemory'] += chunk.length
 
@@ -78,6 +83,12 @@ export async function sendRequestFile(peerId, prodIp, prodPort, fileHash, jobId)
                 fileStream.end();
                 sendRequestTransaction(peerId, prodIp, prodPort, fileHash, 2)
                 jobs[jobId]['status'] = 'completed'
+
+                activities['downloads'].push({
+                    date: new Date().toISOString().split("T")[0],   // Output: 2024-04-24
+                    fileType: filePath.split('.').pop()
+                })
+
                 console.log('File downloaded successfully');
             });
         })

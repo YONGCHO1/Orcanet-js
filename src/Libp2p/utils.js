@@ -12,7 +12,7 @@ export function hashFile(fileName) {
     const filePath = join(producerFilesPath, fileName);
     const fileContent = fs.readFileSync(filePath);
     const fileHash = crypto.createHash('sha256').update(fileContent).digest('hex');
-    console.log('Filehash: ', fileHash);
+    return fileHash;
 }
 
 export function generateRandomWord() {
@@ -119,5 +119,9 @@ let recievedPayment = {};
 let bufferedFiles = {};
 let fileRequests = [];
 let jobs = {};              // { jobId : Job}
-const MAX_CHUNK_SIZE = 1024 * 2;
-export {recievedPayment, bufferedFiles, fileRequests, MAX_CHUNK_SIZE, jobs}
+let upload_speeds = {};
+let download_speeds = {};
+let activities = {uploads: [], downloads: []}
+
+const MAX_CHUNK_SIZE = 1024 * 62;
+export {recievedPayment, bufferedFiles, fileRequests, MAX_CHUNK_SIZE, jobs, upload_speeds, download_speeds, activities}

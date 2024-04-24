@@ -6,7 +6,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import crypto from 'crypto';
-import { MAX_CHUNK_SIZE } from '../Libp2p/utils.js';
+import { MAX_CHUNK_SIZE, activities, upload_speeds } from '../Libp2p/utils.js';
 import http from 'http';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -92,6 +92,11 @@ app.get('/requestFile', async (req, res) => {
         }
         remainingBytes -= bytesRead;
         bytesProcessed += bytesRead;
+
+        const currentTimeInSeconds = Math.floor(Date.now() / 1000);
+        if (Object.keys(upload_speeds).length > 10000) {upload_speeds = {}}
+        if (!upload_speeds.hasOwnProperty[currentTimeInSeconds]) {upload_speeds[currentTimeInSeconds] = 0}
+        upload_speeds[currentTimeInSeconds] += bytesRead;
       }
 
       console.log('sent chunk')
@@ -104,6 +109,11 @@ app.get('/requestFile', async (req, res) => {
         fs.closeSync(fileHandle);
         // End the response
         res.end();
+        
+        activities['uploads'].push({
+          date: new Date().toISOString().split("T")[0],   // Output: 2024-04-24
+          fileType: filePath.split('.').pop()
+        })
         break
       }
 
