@@ -228,6 +228,7 @@ async function checkHolders(call, callback) {
     const cid = "/pk/" + call.request.fileHash;
     console.log("------------------check holders---------------------");
 
+    let hasOrNot
 
     for (const peer of await node.peerStore.all()) {
         hasOrNot =  peer.metadata.has(cid);
@@ -245,8 +246,6 @@ async function checkHolders(call, callback) {
         let message;
 
         node.services.dht.refreshRoutingTable();
-
-        let hasOrNot
 
 
         const value = node.services.dht.get(keyEncoded);
