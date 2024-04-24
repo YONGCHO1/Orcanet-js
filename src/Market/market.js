@@ -147,8 +147,8 @@ async function registerFile(call, callback) {
             console.log("value of each qeury is ", message);
         }
         for (const peer of await node.peerStore.all()) {
-            // console.log('peer address '+peer.addresses);
-            // console.log('peer id '+peer.id);
+            console.log('peer address '+peer.addresses);
+            console.log('peer id '+peer.id);
             // console.log('peer metadata '+new TextDecoder('utf8').decode(peer.metadata));
             // console.log('peer record '+peer.peerRecordEnvelope);
             // console.log('peer protocols '+peer.protocols);
@@ -229,9 +229,10 @@ async function checkHolders(call, callback) {
     console.log("------------------check holders---------------------");
 
     let hasOrNot
-
+    console.log("before getting into peerstore")
     for (const peer of await node.peerStore.all()) {
         hasOrNot =  peer.metadata.has(cid);
+        console.log("getting into peerstore")
 
         if (hasOrNot) {
             console.log(`${peer.id} has value for ${cid}`);
