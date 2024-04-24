@@ -4,14 +4,14 @@ import http from 'http';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import { MAX_CHUNK_SIZE } from '../Libp2p/utils.js';
+import { MAX_CHUNK_SIZE, jobs } from '../Libp2p/utils.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const consumerFilesPath = path.join(__dirname, '..', 'testConsumerFiles');
 
 let pay = 0
 
-export async function sendRequestFile(peerId, prodIp, prodPort, fileHash) {
+export async function sendRequestFile(peerId, prodIp, prodPort, fileHash, jobId) {
     if (!fs.existsSync(consumerFilesPath)) {fs.mkdirSync(consumerFilesPath);}
     const requestURL = `http://${prodIp}:${prodPort}/requestFile?fileHash=${fileHash}&peerID=${peerId}`;
 
@@ -38,10 +38,15 @@ export async function sendRequestFile(peerId, prodIp, prodPort, fileHash) {
 
             const fileStream = fs.createWriteStream(filePath);
 
+            jobs[jobId]['fileName'] = filename;
+
             response.on('data', async (chunk) => {
                 // Accumulate received chunks
                 accumulatedChunks = Buffer.concat([accumulatedChunks, chunk]);
                 totalBytesReceived += chunk.length;
+
+                if (jobs[jobId]['status'] == 'error') { return}
+                jobs[jobId]['accumulatedMemory'] += chunk.length
 
                 // Check if accumulated size matches the desired chunk size
                 if (totalBytesReceived >= MAX_CHUNK_SIZE) {
@@ -49,6 +54,11 @@ export async function sendRequestFile(peerId, prodIp, prodPort, fileHash) {
                     fileStream.write(accumulatedChunks);
 
                     console.log('Received chunk of size:', accumulatedChunks.length);
+                    while (jobs[jobId]['status'] != 'active') {
+                        await new Promise(resolve => setTimeout(resolve, 5000));
+                    }
+                    jobs[jobId]['accumulatedCost'] += 2
+
                     sendRequestTransaction(peerId, prodIp, prodPort, fileHash, 2)
 
                     // Reset accumulated chunks and total bytes received
@@ -67,11 +77,15 @@ export async function sendRequestFile(peerId, prodIp, prodPort, fileHash) {
                 // Close the file stream when all data has been received
                 fileStream.end();
                 sendRequestTransaction(peerId, prodIp, prodPort, fileHash, 2)
+                jobs[jobId]['status'] = 'completed'
                 console.log('File downloaded successfully');
             });
         })
         return true;
-    } catch (error ) {return false}
+    } catch (error ) {
+        jobs[jobId]['status'] = 'error'
+        return false
+    }
 }
 
 export async function sendRequestTransaction(peerId, prodIp, prodPort, fileHash, amount) {

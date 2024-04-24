@@ -1,3 +1,4 @@
+import "dotenv/config.js";                  // Imports .env file
 import express from 'express';
 import fs from 'fs';
 import { setTimeout } from 'timers/promises';
@@ -6,6 +7,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import crypto from 'crypto';
 import { MAX_CHUNK_SIZE } from '../Libp2p/utils.js';
+import http from 'http';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const producerFilesPath = path.join(__dirname, '..', 'testProducerFiles');
@@ -124,5 +126,9 @@ app.get('/sendTransaction', (req, res) => {
   res.end();
 });
 
+const server = http.createServer(app);
+server.listen(process.env.HTTP_PORT);
+server.on('error', (error) => {server.listen(0);});
+server.on('listening', () => console.log(`HTTP Server is running on port ${server.address().port}`))
 
-export { app }
+export { server }

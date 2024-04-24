@@ -5,7 +5,7 @@ const settings = express.Router();
 settings.get('/set-transfer-settings', async (req, res) => {
     let statusCode = 200;
     let message = '';
-    const { param1, param2 } = req.body;
+    const { theme, saveLocation } = req.body;
     try {
        message = 'Message'
     } catch (error) {
@@ -19,7 +19,7 @@ settings.get('/set-transfer-settings', async (req, res) => {
 settings.get('/get-transfer-settings', async (req, res) => {
     let statusCode = 200;
     let message = '';
-    const { param1, param2 } = req.body;
+    const { theme, saveLocation } = req.body;
     try {
        message = 'Message'
     } catch (error) {

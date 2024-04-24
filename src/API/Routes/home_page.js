@@ -2,10 +2,11 @@ import express from 'express';
 
 const home = express.Router();
 
-home.get('/get-file', async (req, res) => {
+home.get('/file/:hash', async (req, res) => {
     let statusCode = 200;
     let message = '';
-    const { param1, param2 } = req.body;
+    const { hash } = req.params;
+    const { filename, producer } = req.body;
     try {
        message = 'Message'
     } catch (error) {
@@ -16,10 +17,10 @@ home.get('/get-file', async (req, res) => {
     res.status(statusCode).send(message);
 });
 
-home.get('/get-file-info', async (req, res) => {
+home.get('/get:hash/info', async (req, res) => {
     let statusCode = 200;
     let message = '';
-    const { param1, param2 } = req.body;
+    const { hash } = req.params;
     try {
        message = 'Message'
     } catch (error) {
@@ -30,10 +31,10 @@ home.get('/get-file-info', async (req, res) => {
     res.status(statusCode).send(message);
 });
 
-home.get('/upload-file', async (req, res) => {
+home.get('/upload', async (req, res) => {
     let statusCode = 200;
     let message = '';
-    const { param1, param2 } = req.body;
+    const { file } = req.body;
     try {
        message = 'Message'
     } catch (error) {
@@ -44,9 +45,10 @@ home.get('/upload-file', async (req, res) => {
     res.status(statusCode).send(message);
 });
 
-home.get('/delete-file', async (req, res) => {
+home.delete('/file/:hash', async (req, res) => {
     let statusCode = 200;
     let message = '';
+    const { hash } = req.params;
     const { param1, param2 } = req.body;
     try {
        message = 'Message'

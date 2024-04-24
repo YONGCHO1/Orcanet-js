@@ -27,6 +27,7 @@
     "@libp2p/websockets": "^8.0.15",
     "@multiformats/multiaddr": "^12.2.1",
     "abort-controller": "^3.0.0",
+    "dotenv": "^16.4.5",
     "express": "^4.18.2",
     "geoip-lite": "^1.4.10",
     "google-protobuf": "^3.21.2",
@@ -41,8 +42,8 @@
     "peer-id": "^0.16.0",
     "protobufjs": "^7.2.6",
     "pubsub": "^3.2.1",
+    "sqlite3": "^5.1.7",
     "tweetnacl": "^1.0.3",
-    "tweetnacl-util": "^0.15.1",
-    "sqlite3": "^5.1.7"
+    "tweetnacl-util": "^0.15.1"
   }
 }

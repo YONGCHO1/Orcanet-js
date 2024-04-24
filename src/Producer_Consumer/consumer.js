@@ -18,51 +18,21 @@ export class Consumer {
 
     */
     static viewProducers(hash) {
-        const args = {
-            fileHash : hash
-        }
-
-        market.checkHolders(args, (error, response) => {
-            if (error) {
-                console.error('Error: ', error);
-                return false;
-            } else {
-                console.log('Producers for file', hash, ": ", response);
-                var users = response.holders; // holders is a list of Users
-                return users;
-            }
-        });
-    }
-
-    /*
-        Description:
-            Consumer downloads file, and finalizes transaction
-        Parameters:
-            [String] producerIP -> Public IP of producer
-            [String] hash ->  Hash of the file
-        Returns:
-            [true] If consumer succesfully downloaded file
-            [false] otherwise
-    */
-    static queryProducer(producerIP, hash) {
-        const fileUrl = `http://${producerIP}/${hash}`;
-        const destinationDirectory = './http_server_files';
-        const fileName = path.basename(fileUrl);
-        const destinationPath = path.join(destinationDirectory, fileName);
-
-        http.get(fileUrl, (response) => {
-            if (response.statusCode === 200) {
-              const fileStream = fs.createWriteStream(destinationPath);
-              response.pipe(fileStream);
-              fileStream.on('finish', () => {
-                fileStream.close();
-                console.log(`File downloaded to ${destinationPath}`);
-              });
-              return true;
-            } else {
-              console.error(`Failed to download file. Status code: ${response.statusCode}`);
-              return false;
-            }
+        return new Promise((resolve, reject) => {
+            const args = {
+                fileHash: hash
+            };
+    
+            market.checkHolders(args, (error, response) => {
+                if (error) {
+                    console.error('Error: ', error);
+                    reject(error);
+                } else {
+                    console.log('Producers for file', hash, ": ", response);
+                    var users = response.holders; // holders is a list of Users
+                    resolve(users);
+                }
+            });
         });
     }
 }

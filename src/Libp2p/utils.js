@@ -118,5 +118,6 @@ export async function getPublicMultiaddr(node) {
 let recievedPayment = {};
 let bufferedFiles = {};
 let fileRequests = [];
-const MAX_CHUNK_SIZE = 1024 * 60;
-export {recievedPayment, bufferedFiles, fileRequests, MAX_CHUNK_SIZE}
+let jobs = {};              // { jobId : Job}
+const MAX_CHUNK_SIZE = 1024 * 2;
+export {recievedPayment, bufferedFiles, fileRequests, MAX_CHUNK_SIZE, jobs}

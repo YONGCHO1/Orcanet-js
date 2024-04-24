@@ -24,7 +24,7 @@ const getNode = (n) => {
 var market_proto = grpc.loadPackageDefinition(packageDefinition).market;
 
 
-let target = "172.174.239:50052";
+let target = "127.0.0.1:5000";
 
 const server = new grpc.Server();
 server.addService(market_proto.Market.service, { RegisterFile: registerFile, CheckHolders: checkHolders });

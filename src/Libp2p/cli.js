@@ -40,7 +40,7 @@ export default function displayMenu(discoveredPeers, node) {
         console.log("12. Get producers of file");
         console.log("13. Hash a file");
         console.log("_. Exit");
-
+        
         rl.question("\nEnter your choice: ", async (choice) => {
             switch (choice) {
                 case '1':
