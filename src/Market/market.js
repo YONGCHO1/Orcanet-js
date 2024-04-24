@@ -75,7 +75,7 @@ async function registerFile(call, callback) {
                 const putv = node.services.dht.put(keyEncoded, valueEncoded);
                 for await (const queryEvent of putv) {
                     // Handle each query event
-                    // console.log('Query event from put(): ', queryEvent);
+                    console.log('Query event from put(): ', queryEvent.value);
                     const message = new TextDecoder('utf8').decode(queryEvent.value);
                     console.log("value of each qeury is ", message);
                 }

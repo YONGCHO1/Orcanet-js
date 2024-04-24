@@ -98,24 +98,22 @@ async function main() {
             identify: identify(),
             pubsub: gossipsub(options),
             dht: kadDHT({
-                clientMode: false,
                 // protocol: "market",
                 // peerInfoMapper: removePrivateAddressesMapper,
-                selectors: {
-                    market: () => {
-                        return 0;
-                    }
-                },
-                validators: {
-                    market: () => {
-                        return true;
-                    }
-                },
-                
+                // selectors: {
+                //     market: () => {
+                //         return 0;
+                //     }
+                // },
+                // validators: {
+                //     market: () => {
+                //         return true;
+                //     }
+                // },
             })
         },
         config: {
-            kadDHT: {
+            dht: {
                 enabled: true,
                 randomWalk: {
                     enabled: true,
@@ -153,7 +151,8 @@ async function main() {
         // event.detail.
         // console.log(event.detail.multihash);
         // const peer = await nodes.peerRouting.findPeer(peerInfo);
-        await test_node2.dial(peerInfo);
+        let conn = await test_node2.dial(peerInfo);
+        console.log("peer who is dialed is "+conn.remotePeer);
         // await test_node2.peerStore.save(peerInfo, );
 
         // discoveredPeers.forEach(async x => {
