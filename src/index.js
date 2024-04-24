@@ -224,7 +224,6 @@ async function main() {
     }
     process.on('SIGTERM', () => stop(test_node2))
     process.on('SIGINT', () => stop(test_node2))
-    createAPI(test_node2);
 
     displayMenu(discoveredPeers, test_node2, test_node);
     
