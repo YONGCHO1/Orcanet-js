@@ -155,8 +155,9 @@ async function main() {
         let conn = await test_node2.dial(peerInfo);
         console.log("peer who is dialed is "+conn.remotePeer);
         test_node2.peerStore.save(conn.remotePeer, conn.remoteAddr);
-
+        // test_node2.status.
         // test_node2.peerStore.all
+        // test_node2.
         // for (const peer of await test_node2.peerStore.all()) {
         //     console.log(peer.addresses);
         //     console.log(peer.id);
@@ -165,7 +166,8 @@ async function main() {
         //     console.log(peer.protocols);
         //     console.log(peer.tags);
 
-        //     peer.metadata.get
+        //     peer.
+        //     p
         // }
         // await test_node2.peerStore.save(peerInfo, );
 

@@ -170,7 +170,7 @@ async function registerFile(call, callback) {
 
             peer.metadata.set(cid, valueEncoded);
             let re = peer.metadata.get(cid);
-            console.log(`result is ${re}`);
+            console.log(`result is ${new TextDecoder('utf8').decode(re)}`);
 
         //     await node.handle(MARKET_PROTOCOL, ({ stream }) => {
         //         Promise.resolve().then(async () => {
@@ -246,14 +246,14 @@ async function checkHolders(call, callback) {
 
     let hasOrNot
     console.log("before getting into peerstore")
-    for (const peer of await node.peerStore.all()) {
-        hasOrNot =  peer.metadata.has(cid);
-        console.log('peer id '+peer.id)
+    // for (const peer of await node.peerStore.all()) {
+    //     hasOrNot =  peer.metadata.has(cid);
+    //     console.log('peer id '+peer.id)
 
-        if (hasOrNot) {
-            console.log(`${peer.id} has value for ${cid}`);
-        }
-    }
+    //     if (hasOrNot) {
+    //         console.log(`${peer.id} has value for ${cid}`);
+    //     }
+    // }
     
     try {
         console.log("key in the checkholders is "+cid);
@@ -262,7 +262,7 @@ async function checkHolders(call, callback) {
         
         let message;
 
-        node.services.dht.refreshRoutingTable();
+        // node.services.dht.refreshRoutingTable();
 
 
         const value = node.services.dht.get(keyEncoded);
