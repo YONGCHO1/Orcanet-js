@@ -165,7 +165,7 @@ async function main() {
         //     console.log(peer.protocols);
         //     console.log(peer.tags);
 
-        //     peer.metadata.
+        //     peer.metadata.get
         // }
         // await test_node2.peerStore.save(peerInfo, );
 

@@ -61,6 +61,20 @@ async function registerFile(call, callback) {
         // console.log(`node Id checking: ${node.peerId}`);
         console.log(`node Id checking: ${newUser.id}`);
 
+        let hasOrNot
+        console.log("before getting into peerstore")
+        for (const peer of await node.peerStore.all()) {
+            hasOrNot =  peer.metadata.has(cid);
+            console.log('peer id '+peer.id)
+
+            if (hasOrNot) {
+                console.log(`${peer.id} has value for ${cid}`);
+                break;
+            }
+        }
+
+
+
         let existingUserStr;
         const exist = node.services.dht.get(keyEncoded);
         for await (const queryEvent of exist) {
@@ -155,6 +169,8 @@ async function registerFile(call, callback) {
             // console.log('peer tags '+peer.tags);
 
             peer.metadata.set(cid, valueEncoded);
+            let re = peer.metadata.get(cid);
+            console.log(`result is ${re}`);
 
         //     await node.handle(MARKET_PROTOCOL, ({ stream }) => {
         //         Promise.resolve().then(async () => {
@@ -232,7 +248,7 @@ async function checkHolders(call, callback) {
     console.log("before getting into peerstore")
     for (const peer of await node.peerStore.all()) {
         hasOrNot =  peer.metadata.has(cid);
-        console.log("getting into peerstore")
+        console.log('peer id '+peer.id)
 
         if (hasOrNot) {
             console.log(`${peer.id} has value for ${cid}`);
