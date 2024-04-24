@@ -41,7 +41,7 @@ server.bindAsync(target, grpc.ServerCredentials.createInsecure(), (error) => {
 // ######## Registerfile Function #########
 async function registerFile(call, callback) {
     let newUser = call.request.user;
-    let cid = "/market/" + call.request.fileHash;
+    let cid = "/pk/" + call.request.fileHash;
 
     // const bytes = json.encode({ fileHash: call.request.fileHash })
 
@@ -142,7 +142,9 @@ async function registerFile(call, callback) {
     }
     node.services.dht.refreshRoutingTable();
 
+    console.log("passed put()");
     const value = node.services.dht.get(keyEncoded);
+    console.log(value);
     for await (const queryEvent of value) {
         const message = new TextDecoder('utf8').decode(queryEvent.value);
         console.log("value of each qeury is ", message);
@@ -163,7 +165,7 @@ async function registerFile(call, callback) {
 
 // ######## CheckHolders Function #########
 async function checkHolders(call, callback) {
-    const cid = "/market/" + call.request.fileHash;
+    const cid = "/pk/" + call.request.fileHash;
     console.log("------------------check holders---------------------");
     
     try {

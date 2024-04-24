@@ -16,6 +16,7 @@ import {EventEmitter} from 'node:events';
 import { createHTTPGUI } from "./Libp2p/gui-connection.js"
 import { identify } from '@libp2p/identify'
 
+
 class Emitter extends EventEmitter {}
 
 const options = {
@@ -98,22 +99,22 @@ async function main() {
             identify: identify(),
             pubsub: gossipsub(options),
             dht: kadDHT({
-                // protocol: "market",
-                // peerInfoMapper: removePrivateAddressesMapper,
-                // selectors: {
-                //     market: () => {
-                //         return 0;
-                //     }
-                // },
-                // validators: {
-                //     market: () => {
-                //         return true;
-                //     }
-                // },
+                kBucketSize: 20,
+                clientMode: false,
+                selectors: {
+                    pk: () => {
+                        return 0;
+                    }
+                },
+                validators: {
+                    pk: () => {
+                        return true;
+                    }
+                },
             })
         },
         config: {
-            kadDHT: {
+            dht: {
                 enabled: true,
                 randomWalk: {
                     enabled: true,
