@@ -113,7 +113,7 @@ async function main() {
             })
         },
         config: {
-            dht: {
+            kadDHT: {
                 enabled: true,
                 randomWalk: {
                     enabled: true,
