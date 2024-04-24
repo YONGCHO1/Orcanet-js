@@ -154,6 +154,19 @@ async function main() {
         // const peer = await nodes.peerRouting.findPeer(peerInfo);
         let conn = await test_node2.dial(peerInfo);
         console.log("peer who is dialed is "+conn.remotePeer);
+        test_node2.peerStore.save(conn.remotePeer, conn.remoteAddr);
+
+        // test_node2.peerStore.all
+        // for (const peer of await test_node2.peerStore.all()) {
+        //     console.log(peer.addresses);
+        //     console.log(peer.id);
+        //     console.log(peer.metadata);
+        //     console.log(peer.peerRecordEnvelope);
+        //     console.log(peer.protocols);
+        //     console.log(peer.tags);
+
+            
+        // }
         // await test_node2.peerStore.save(peerInfo, );
 
         // discoveredPeers.forEach(async x => {

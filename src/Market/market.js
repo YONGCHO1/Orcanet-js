@@ -5,7 +5,9 @@ import protoLoader from '@grpc/proto-loader';
 import { CID } from 'multiformats/cid'
 import * as json from 'multiformats/codecs/json'
 import { sha256 } from 'multiformats/hashes/sha2'
+import { lpStream } from 'it-length-prefixed-stream'
 // import { DHTRecord } from '@libp2p/kad-dht';
+const MARKET_PROTOCOL = '/market/1.0.0';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PROTO_PATH = __dirname + '/market.proto';
@@ -138,13 +140,65 @@ async function registerFile(call, callback) {
             const message = new TextDecoder('utf8').decode(queryEvent.value);
             console.log("value of each qeury is ", message);
         }
+        for (const peer of await node.peerStore.all()) {
+            console.log('peer address '+peer.addresses);
+            console.log('peer id '+peer.id);
+            console.log('peer metadata '+new TextDecoder('utf8').decode(peer.metadata));
+            console.log('peer record '+peer.peerRecordEnvelope);
+            console.log('peer protocols '+peer.protocols);
+            console.log('peer tags '+peer.tags);
+
+            peer.metadata.set(cid, valueEncoded);
+
+        //     await node.handle(MARKET_PROTOCOL, ({ stream }) => {
+        //         Promise.resolve().then(async () => {
+        //             // lpStream lets us read/write in a predetermined order
+        //             const lp = lpStream(stream)
+                
+        //             // read the incoming request
+        //             const req = await lp.read()
+                
+        //             // deserialize the query
+        //             const query = JSON.parse(new TextDecoder().decode(req.subarray()))
+                
+        //             if (query.question === 'What is the air-speed velocity of an unladen swallow?') {
+        //                 // write the response
+        //                 await lp.write(new TextEncoder().encode(JSON.stringify({
+        //                 answer: 'Is that an African or a European swallow?'
+        //                 })))
+        //             } else {
+        //                 // write the response
+        //                 await lp.write(new TextEncoder().encode(JSON.stringify({
+        //                 error: "What? I don't know?!"
+        //                 })))
+        //             }
+        //         })
+        //         .catch(err => {
+        //             stream.abort(err)
+        //         })
+        //     })
+
+        //     const stream = await local.dialProtocol(node.getMultiaddrs(), MARKET_PROTOCOL)
+        //     // lpStream lets us read/write in a predetermined order
+        //     const lp = lpStream(stream)
+
+        //     // send the query
+        //     await lp.write(new TextEncoder().encode(JSON.stringify({
+        //     question: 'What is the air-speed velocity of an unladen swallow?'
+        //     })))
+
+        //     // read the response
+        //     const res = await lp.read()
+        //     const output = JSON.parse(new TextDecoder().decode(res.subarray()))
+
+        //     console.info(`The answer is: "${output.answer}"`)
+              
+        }
         // await node.contentRouting.provide(cid);
     }
     node.services.dht.refreshRoutingTable();
 
-    console.log("passed put()");
     const value = node.services.dht.get(keyEncoded);
-    console.log(value);
     for await (const queryEvent of value) {
         const message = new TextDecoder('utf8').decode(queryEvent.value);
         console.log("value of each qeury is ", message);

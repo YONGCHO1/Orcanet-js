@@ -31,6 +31,7 @@
     "express": "^4.18.2",
     "geoip-lite": "^1.4.10",
     "google-protobuf": "^3.21.2",
+    "it-length-prefixed-stream": "^1.1.7",
     "libp2p": "^1.4.0",
     "libp2p-bootstrap": "^0.14.0",
     "libp2p-crypto": "^0.21.2",
