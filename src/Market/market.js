@@ -113,6 +113,9 @@ async function registerFile(call, callback) {
                             const message = new TextDecoder('utf8').decode(queryEvent.value);
                             console.log("value of each qeury is ", message);
                         }
+                        for (const peer of await node.peerStore.all()) {
+                            peer.metadata.set(cid, newValueEncoded);
+                        }
                         break;
                     }
                 }
@@ -124,6 +127,9 @@ async function registerFile(call, callback) {
                     for await (const queryEvent of putv) {
                         const message = new TextDecoder('utf8').decode(queryEvent.value);
                         console.log("value of each qeury is ", message);
+                    }
+                    for (const peer of await node.peerStore.all()) {
+                        peer.metadata.set(cid, newValueEncoded);
                     }
                 }
             }
@@ -141,12 +147,12 @@ async function registerFile(call, callback) {
             console.log("value of each qeury is ", message);
         }
         for (const peer of await node.peerStore.all()) {
-            console.log('peer address '+peer.addresses);
-            console.log('peer id '+peer.id);
-            console.log('peer metadata '+new TextDecoder('utf8').decode(peer.metadata));
-            console.log('peer record '+peer.peerRecordEnvelope);
-            console.log('peer protocols '+peer.protocols);
-            console.log('peer tags '+peer.tags);
+            // console.log('peer address '+peer.addresses);
+            // console.log('peer id '+peer.id);
+            // console.log('peer metadata '+new TextDecoder('utf8').decode(peer.metadata));
+            // console.log('peer record '+peer.peerRecordEnvelope);
+            // console.log('peer protocols '+peer.protocols);
+            // console.log('peer tags '+peer.tags);
 
             peer.metadata.set(cid, valueEncoded);
 
@@ -230,6 +236,16 @@ async function checkHolders(call, callback) {
         let message;
 
         node.services.dht.refreshRoutingTable();
+
+        let hasOrNot
+
+        for (const peer of await node.peerStore.all()) {
+            hasOrNot =  peer.metadata.has(cid);
+
+            if (hasOrNot) {
+                console.log(`${peer.id} has value for ${cid}`);
+            }
+        }
 
         const value = node.services.dht.get(keyEncoded);
         for await (const queryEvent of value) {
