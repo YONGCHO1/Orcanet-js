@@ -227,6 +227,15 @@ async function registerFile(call, callback) {
 async function checkHolders(call, callback) {
     const cid = "/pk/" + call.request.fileHash;
     console.log("------------------check holders---------------------");
+
+
+    for (const peer of await node.peerStore.all()) {
+        hasOrNot =  peer.metadata.has(cid);
+
+        if (hasOrNot) {
+            console.log(`${peer.id} has value for ${cid}`);
+        }
+    }
     
     try {
         console.log("key in the checkholders is "+cid);
@@ -239,13 +248,6 @@ async function checkHolders(call, callback) {
 
         let hasOrNot
 
-        for (const peer of await node.peerStore.all()) {
-            hasOrNot =  peer.metadata.has(cid);
-
-            if (hasOrNot) {
-                console.log(`${peer.id} has value for ${cid}`);
-            }
-        }
 
         const value = node.services.dht.get(keyEncoded);
         for await (const queryEvent of value) {
