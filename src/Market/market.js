@@ -73,7 +73,9 @@ async function registerFile(call, callback) {
             }
         }
 
+        console.log(node.services.dht.getMode());
 
+        node.services.dht.setMode("server");
 
         let existingUserStr;
         const exist = node.services.dht.get(keyEncoded);
@@ -234,6 +236,8 @@ async function registerFile(call, callback) {
         console.log("peer of each qeury is ", peer);
     }
     
+    node.services.dht.setMode("client");
+
     console.log("----------------end register file-------------------");
     callback(null, {});
 }

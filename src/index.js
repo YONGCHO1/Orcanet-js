@@ -100,7 +100,7 @@ async function main() {
             pubsub: gossipsub(options),
             dht: kadDHT({
                 kBucketSize: 20,
-                clientMode: false,
+                clientMode: true,
                 selectors: {
                     pk: () => {
                         return 0;
@@ -155,7 +155,7 @@ async function main() {
         let conn = await test_node2.dial(peerInfo);
         console.log("peer who is dialed is "+conn.remotePeer);
         test_node2.peerStore.save(conn.remotePeer, conn.remoteAddr);
-        // test_node2.status.
+        // test_node2.services.dht.getMode()
         // test_node2.peerStore.all
         // test_node2.
         // for (const peer of await test_node2.peerStore.all()) {
